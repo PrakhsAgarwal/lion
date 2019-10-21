@@ -87,38 +87,30 @@ describe('lion-button-switch', () => {
   });
 
   describe('a11y', () => {
-    describe('aria-pressed', () => {
-      it('should have initial state', () => {
-        expect(el.hasAttribute('aria-pressed')).to.be.true;
-        expect(el.getAttribute('aria-pressed')).to.equal('false');
-      });
+    it('should manage "aria-pressed"', async () => {
+      expect(el.hasAttribute('aria-pressed')).to.be.true;
+      expect(el.getAttribute('aria-pressed')).to.equal('false');
 
-      it('should change on click', async () => {
-        el.click();
-        await el.updateComplete;
-        expect(el.getAttribute('aria-pressed')).to.equal('true');
-        el.click();
-        await el.updateComplete;
-        expect(el.getAttribute('aria-pressed')).to.equal('false');
-      });
+      el.click();
+      await el.updateComplete;
+      expect(el.getAttribute('aria-pressed')).to.equal('true');
+      el.click();
+      await el.updateComplete;
+      expect(el.getAttribute('aria-pressed')).to.equal('false');
 
-      it('should change on "checked" property updates', async () => {
-        el.checked = true;
-        await el.updateComplete;
-        expect(el.getAttribute('aria-pressed')).to.equal('true');
-        el.checked = false;
-        await el.updateComplete;
-        expect(el.getAttribute('aria-pressed')).to.equal('false');
-      });
+      el.checked = true;
+      await el.updateComplete;
+      expect(el.getAttribute('aria-pressed')).to.equal('true');
+      el.checked = false;
+      await el.updateComplete;
+      expect(el.getAttribute('aria-pressed')).to.equal('false');
 
-      it('should change on "checked" attribute updates', async () => {
-        el.setAttribute('checked', true);
-        await el.updateComplete;
-        expect(el.getAttribute('aria-pressed')).to.equal('true');
-        el.removeAttribute('checked');
-        await el.updateComplete;
-        expect(el.getAttribute('aria-pressed')).to.equal('false');
-      });
+      el.setAttribute('checked', true);
+      await el.updateComplete;
+      expect(el.getAttribute('aria-pressed')).to.equal('true');
+      el.removeAttribute('checked');
+      await el.updateComplete;
+      expect(el.getAttribute('aria-pressed')).to.equal('false');
     });
   });
 });
