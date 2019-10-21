@@ -56,41 +56,26 @@ export class LionButtonSwitch extends LionButton {
   constructor() {
     super();
     this.type = 'button';
-    this.disabled = false;
     this.checked = false;
+    this.addEventListener('click', this.__handleToggleStateChange);
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.__toggleStateHandler = () => {
-      if (this.disabled) {
-        return;
-      }
-      this.checked = !this.checked;
-      this.dispatchEvent(
-        new CustomEvent('checked-changed', {
-          composed: true,
-          bubbles: true,
-          detail: this.checked,
-        }),
-      );
-    };
-    this.addEventListener('click', this.__toggleStateHandler);
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this.__toggleStateHandler) {
-      this.removeEventListener('click', this.__toggleStateHandler);
-      this.__toggleStateHandler = null;
+  __handleToggleStateChange() {
+    if (this.disabled) {
+      return;
     }
+    this.checked = !this.checked;
+    this.dispatchEvent(
+      new CustomEvent('checked-changed', {
+        composed: true,
+        bubbles: true,
+        detail: this.checked,
+      }),
+    );
   }
 
   updated(changedProperties) {
     super.updated(changedProperties);
-    if (!changedProperties) {
-      return;
-    }
     if (changedProperties.has('checked')) {
       this.setAttribute('aria-pressed', `${this.checked}`);
     }

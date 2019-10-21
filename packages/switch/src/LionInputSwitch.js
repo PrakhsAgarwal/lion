@@ -34,7 +34,7 @@ export class LionInputSwitch extends ChoiceInputMixin(LionField) {
 
   render() {
     return html`
-      <div class="switch__slots">
+      <div class="input-switch__container">
         <slot name="label"></slot>
         <slot name="help-text"></slot>
         <slot name="feedback"></slot>
@@ -45,13 +45,11 @@ export class LionInputSwitch extends ChoiceInputMixin(LionField) {
 
   connectedCallback() {
     super.connectedCallback();
-    this._setupButtonSwitch();
+    this._buttonSwitchNode.addEventListener(
+      'checked-changed',
+      this.__handleButtonSwitchCheckedChanged.bind(this),
+    );
     this._syncButtonSwitch();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._cleanButtonSwitch();
   }
 
   updated(changedProperties) {
@@ -59,24 +57,14 @@ export class LionInputSwitch extends ChoiceInputMixin(LionField) {
     this._syncButtonSwitch();
   }
 
-  // TODO: should be replaced by "_inputNode"
-  // after the next breaking change
+  // TODO: should be replaced by "_inputNode" after the next breaking change
+  // https://github.com/ing-bank/lion/blob/master/packages/field/src/FormControlMixin.js#L78
   get _buttonSwitchNode() {
     return this.querySelector('[slot=input]');
   }
 
-  _setupButtonSwitch() {
-    this._buttonCheckedHandler = e => {
-      this.checked = e.detail;
-    };
-    this._buttonSwitchNode.addEventListener('checked-changed', this._buttonCheckedHandler);
-  }
-
-  _cleanButtonSwitch() {
-    if (this._buttonCheckedHandler) {
-      this._buttonSwitchNode.removeEventListener('checked-changed', this._buttonCheckedHandler);
-      this._buttonCheckedHandler = null;
-    }
+  __handleButtonSwitchCheckedChanged() {
+    this.checked = this._buttonSwitchNode.checked;
   }
 
   _syncButtonSwitch() {
